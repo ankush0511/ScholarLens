@@ -1,0 +1,13 @@
+google-genai
+langchain-groq
+arxiv
+crewai
+crewai-tools
+streamlit
+langchain-community
+langchain_text_splitters
+fitz
+PyMuPDF
+ChromaDb
+pypdf
+agno
