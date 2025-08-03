@@ -15,4 +15,4 @@ GOOGLE_API_KEY = st.secrets['GOOGLE_API_KEY']
 
 # Initialize embedder and vector DB
 embeddings = GeminiEmbedder(api_key=GOOGLE_API_KEY, id='models/gemini-embedding-001')
-vector_db = ChromaDb(collection="arxiv_papers", path="research", persistent_client=True, embedder=embeddings)
+vector_db = ChromaDb(collection="arxiv_papers", path="./research", persistent_client=True, embedder=embeddings)
