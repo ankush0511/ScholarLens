@@ -8,6 +8,6 @@ langchain-community
 langchain_text_splitters
 fitz
 PyMuPDF
-ChromaDb
+chromadb
 pypdf
 agno
