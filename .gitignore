@@ -10,4 +10,5 @@ __pycache__/
 ./research
 .research
 .__pycache__
+./__pycache__
 .temp_uploaded_file.pdf
