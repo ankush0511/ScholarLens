@@ -6,7 +6,6 @@ crewai-tools
 streamlit
 langchain-community
 langchain_text_splitters
-
 PyMuPDF
 pypdf
 agno
