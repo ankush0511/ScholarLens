@@ -8,7 +8,6 @@ langchain-community
 langchain_text_splitters
 fitz
 PyMuPDF
-chromadb
 pypdf
 agno
 pinecone==5.4.2
