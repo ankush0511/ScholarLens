@@ -19,7 +19,8 @@ GOOGLE_API_KEY = st.secrets['GOOGLE_API_KEY']
 # Initialize embedder and vector DB
 embeddings = GeminiEmbedder(api_key=GOOGLE_API_KEY, id='models/gemini-embedding-001')
 
-api_key = os.getenv("PINECONE_API_KEY")
+# api_key = os.getenv("PINECONE_API_KEY")
+api_key=st.secrets["PINECONE_API_KEY"]
 index_name = "agno"
 
 

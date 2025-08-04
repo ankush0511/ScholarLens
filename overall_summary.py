@@ -12,7 +12,9 @@ from langchain_community.utilities import ArxivAPIWrapper
 arxiv=ArxivAPIWrapper()
 
 load_dotenv()
-api_key=os.getenv("GROQ_API_KEY")
+# api_key=os.getenv("GROQ_API_KEY")
+api_key=st.secrets["GROQ_API_KEY"]
+
 
 llm=ChatGroq(model="gemma2-9b-it",api_key=api_key)
 
