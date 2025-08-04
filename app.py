@@ -1,14 +1,15 @@
-from Agentic_Rag import embeddings, vector_db, PDFKnowledgeBase, PDFReader, Agent, Gemini
+import json
+import tempfile
+import os
 import streamlit as st
 from overall_summary import extract_sections_with_titles, generate_metadata, arxiv, text_splitter
 from find_Research_Paper import run_literature_review
-import json
 from sectionSummarizer import summarize_section, summarizer_agent, LLM, Crew, Process
-from ComparePapers import extract_text_from_pdf, chain, llm, PromptTemplate
+from ComparePapers import extract_text_from_pdf, chain
 from io import BytesIO
 from agno.knowledge.pdf import PDFKnowledgeBase, PDFReader
 from agno.agent import Agent
-
+from Agentic_Rag import embeddings, vector_db, PDFReader,Agent, Gemini
 
 # Initialize session state
 if 'pdf_knowledge_base' not in st.session_state:
@@ -36,7 +37,7 @@ with st.sidebar:
 
 # Sidebar navigation
 options = st.sidebar.selectbox(
-    "Select a page", ["ArXiv Smart Search", "AI Paper Companion", "Compare Research Papers"]
+    "Select a page", ["ArXiv Smart Search", "AI Paper Companion","RAG Chatbot", "Compare Research Papers"]
 )
 
 # Page 1: ArXiv Literature Review
@@ -82,7 +83,7 @@ if options == 'ArXiv Smart Search':
                 )
 
 # Page 2: PDF Assistant (Summary, Sectional Summary, RAG Chatbot)
-elif options == 'AI Paper Companion ':
+elif options == 'AI Paper Companion':
     with st.sidebar:
         st.markdown("## 📎 Upload Paper")
         uploaded_file = st.file_uploader("Upload Paper", type=["pdf"])
@@ -139,51 +140,50 @@ elif options == 'AI Paper Companion ':
                         st.code(raw_output)
 
         
+elif options == 'RAG Chatbot':
 
-        with tab3:
-            st.title("📚 Q&A Agent")
+    with st.sidebar:
+        st.markdown("## 📎 Upload Paper")
+        uploaded_file = st.file_uploader("Upload Paper", type=["pdf"])
 
-            if uploaded_file is not None:
-                if 'pdf_bytes' not in st.session_state:
-                    uploaded_file.seek(0)
-                    st.session_state.pdf_bytes = uploaded_file.read()
+    tmp_path = None
 
-                if st.button("Load Knowledge Base") or st.session_state.get('agent') is None:
-                    try:
-                        # Write file once to disk or process directly from memory
-                        with open("temp_uploaded_file.pdf", "wb") as f:
-                            f.write(st.session_state.pdf_bytes)
+    if uploaded_file is not None:
+        st.success("PDF uploaded successfully!")
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+            tmp_file.write(uploaded_file.read())
+            tmp_path = tmp_file.name
 
-                        pdf_knowledge_base = PDFKnowledgeBase(
-                            path="temp_uploaded_file.pdf",
-                            vector_db=vector_db,
-                            reader=PDFReader(chunk=True)
-                        )
-                        pdf_knowledge_base.load(recreate=False)
+    if st.button("Load Knowledge Base"):
+        if not tmp_path:
+            st.warning("Please upload a PDF first.")
+        else:
+            try:
+                pdf_knowledge_base = PDFKnowledgeBase(
+                    path=tmp_path,
+                    vector_db=vector_db,
+                    reader=PDFReader(chunk=True)
+                )
 
-                        agent = Agent(
-                            knowledge=pdf_knowledge_base,
-                            show_tool_calls=True,
-                            model=Gemini(id="gemini-2.0-flash-lite"),
-                            markdown=True,
-                            read_chat_history=True
-                        )
+                pdf_knowledge_base.load(recreate=False, upsert=True)
 
-                        st.session_state.pdf_knowledge_base = pdf_knowledge_base
-                        st.session_state.agent = agent
-                        st.success("✅ Knowledge base loaded!")
+                agent = Agent(
+                    knowledge=pdf_knowledge_base,
+                    show_tool_calls=True,
+                    model=Gemini(id="gemini-2.0-flash-lite"),
+                    markdown=True,
+                    read_chat_history=True
+                )
 
-                    except Exception as e:
-                        st.error(f"❌ Failed to load knowledge base: {e}")
+                st.session_state.pdf_knowledge_base = pdf_knowledge_base
+                st.session_state.agent = agent
+                st.success("✅ Knowledge base loaded!")
 
-            # Query interface that doesn't cause rerun of file loading
-            if st.session_state.get('agent'):
-                query = st.text_input("🤖 Ask Me Anything About This Paper")
-                if query:
-                    response = st.session_state.agent.run(query)
-                    st.markdown("### Response")
-                    st.write(response.content)
+            except Exception as e:
+                st.error(f"❌ Failed to load knowledge base: {e}")
 
+            finally:
+                os.unlink(tmp_path)  # Always clean up if created
 
 
 # Page 3: Paper Comparison

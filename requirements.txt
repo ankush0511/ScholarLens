@@ -11,3 +11,4 @@ PyMuPDF
 chromadb
 pypdf
 agno
+pinecone==5.4.2

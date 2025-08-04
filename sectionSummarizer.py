@@ -8,6 +8,7 @@ from overall_summary import extract_sections_with_titles
 # Load environment variables
 load_dotenv()
 GOOGLE_API_KEY = st.secrets['GOOGLE_API_KEY']
+# GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 # Initialize the LLM
 llm = LLM(
