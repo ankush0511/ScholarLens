@@ -1,4 +1,4 @@
-import sqlite3
+import patch_sqlite
 import json
 import tempfile
 import os
