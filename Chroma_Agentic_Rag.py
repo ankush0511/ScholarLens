@@ -10,8 +10,8 @@ from agno.models.google import Gemini
 
 # Load environment variables
 load_dotenv()
-# GOOGLE_API_KEY = st.secrets['GOOGLE_API_KEY']
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+GOOGLE_API_KEY = st.secrets['GOOGLE_API_KEY']
+# GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 # Initialize embedder and vector DB
 embeddings = GeminiEmbedder(api_key=GOOGLE_API_KEY, id='models/gemini-embedding-001')

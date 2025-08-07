@@ -11,8 +11,8 @@ from crewai import LLM
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 from google import genai
-# GOOGLE_API_KEY=st.secrets['GOOGLE_API_KEY']
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+GOOGLE_API_KEY=st.secrets['GOOGLE_API_KEY']
+# GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 llm=LLM(
     model="gemini/gemini-2.5-flash",
     api_key=GOOGLE_API_KEY
