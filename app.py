@@ -1,3 +1,4 @@
+import sqlite3
 import json
 import tempfile
 import os
@@ -93,7 +94,7 @@ elif options == 'AI Paper Companion':
         text, index, sections = extract_sections_with_titles(uploaded_file)
         arxiv_id = index[0].replace("arXiv:", "").strip()
 
-        tab1, tab2, tab3 = st.tabs(['⚡ Instant Glance', "📝Summary (Guru Mode)", "📚 Q&A Agent"])
+        tab1, tab2 = st.tabs(['⚡ Instant Glance', "📝Summary (Guru Mode)"])
 
         with tab1:
             st.markdown("## ⚡ Instant Glance")
@@ -140,31 +141,83 @@ elif options == 'AI Paper Companion':
                         st.code(raw_output)
 
         
-elif options == 'RAG Chatbot':
+# elif options == 'RAG Chatbot':
 
+#     with st.sidebar:
+#         st.markdown("## 📎 Upload Paper")
+#         uploaded_file = st.file_uploader("Upload Paper", type=["pdf"])
+
+#     tmp_path = None
+
+#     if uploaded_file is not None:
+#         st.success("PDF uploaded successfully!")
+#         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+#             tmp_file.write(uploaded_file.read())
+#             tmp_path = tmp_file.name
+
+#     if st.button("Load Knowledge Base"):
+#         if not tmp_path:
+#             st.warning("Please upload a PDF first.")
+#         else:
+#             try:
+#                 pdf_knowledge_base = PDFKnowledgeBase(
+#                     path=tmp_path,
+#                     vector_db=vector_db,
+#                     reader=PDFReader(chunk=True)
+#                 )
+
+#                 pdf_knowledge_base.load(recreate=True, upsert=True)
+
+#                 agent = Agent(
+#                     knowledge=pdf_knowledge_base,
+#                     show_tool_calls=True,
+#                     model=Gemini(id="gemini-2.0-flash-lite"),
+#                     markdown=True,
+#                     read_chat_history=True
+#                 )
+
+#                 st.session_state.pdf_knowledge_base = pdf_knowledge_base
+#                 st.session_state.agent = agent
+#                 st.success("✅ Knowledge base loaded!")
+
+            
+#                 if st.session_state.get('agent'):
+#                     query = st.text_input("🤖 Ask Me Anything About This Paper")
+#                     if query:
+#                         response = st.session_state.agent.run(query)
+#                         st.markdown("### Response")
+#                         st.write(response.content)
+
+#             except Exception as e:
+#                 st.error(f"❌ Failed to load knowledge base: {e}")
+
+#             finally:
+#                 os.unlink(tmp_path)  # Always clean up if created
+
+
+elif options == 'RAG Chatbot':
     with st.sidebar:
         st.markdown("## 📎 Upload Paper")
         uploaded_file = st.file_uploader("Upload Paper", type=["pdf"])
 
-    tmp_path = None
-
     if uploaded_file is not None:
         st.success("PDF uploaded successfully!")
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-            tmp_file.write(uploaded_file.read())
-            tmp_path = tmp_file.name
+
+        if 'pdf_temp_path' not in st.session_state:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+                tmp_file.write(uploaded_file.read())
+                st.session_state.pdf_temp_path = tmp_file.name
 
     if st.button("Load Knowledge Base"):
-        if not tmp_path:
+        if 'pdf_temp_path' not in st.session_state:
             st.warning("Please upload a PDF first.")
         else:
             try:
                 pdf_knowledge_base = PDFKnowledgeBase(
-                    path=tmp_path,
+                    path=st.session_state.pdf_temp_path,
                     vector_db=vector_db,
                     reader=PDFReader(chunk=True)
                 )
-
                 pdf_knowledge_base.load(recreate=False, upsert=True)
 
                 agent = Agent(
@@ -182,8 +235,20 @@ elif options == 'RAG Chatbot':
             except Exception as e:
                 st.error(f"❌ Failed to load knowledge base: {e}")
 
-            finally:
-                os.unlink(tmp_path)  # Always clean up if created
+    if st.session_state.get('agent'):
+        query = st.text_input("🤖 Ask Me Anything About This Paper")
+        if query:
+            with st.spinner("Thinking..."):
+                response = st.session_state.agent.run(query)
+                st.markdown("### Response")
+                st.write(response.content)
+    
+    if st.button("Clear Session"):
+        st.session_state.clear()
+        if 'pdf_temp_path' in st.session_state:
+            os.unlink(st.session_state.pdf_temp_path)
+        st.rerun()
+
 
 
 # Page 3: Paper Comparison
