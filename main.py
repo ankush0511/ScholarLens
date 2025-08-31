@@ -1,4 +1,4 @@
-from utils.patch_sqlite import patch_sqlite
+import patch_sqlite
 import json
 import tempfile
 import os
