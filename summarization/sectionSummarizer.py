@@ -3,7 +3,7 @@ import json
 import streamlit as st
 from dotenv import load_dotenv
 from crewai import LLM, Agent, Task, Crew, Process
-from overall_summary import extract_sections_with_titles
+from .overall_summary import extract_sections_with_titles
 
 # Load environment variables
 load_dotenv()

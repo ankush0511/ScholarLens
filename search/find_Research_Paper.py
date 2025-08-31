@@ -132,10 +132,6 @@ def run_literature_review(topic: str, num_papers: int):
         result_json = json.loads(raw_outputs)
         return result_json
     except (json.JSONDecodeError, IndexError) as e:
-        # result.get("raw_output")
-        # json_str = result.raw.strip().replace('```json', '').replace('```', '')
-        # json_str=json.loads(json_str)
-        # return json_str
         json_str = result.raw.strip().replace('```json', '').replace('```', '')
         json_str=json.loads(json_str)
         return json_str
