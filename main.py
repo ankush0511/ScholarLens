@@ -5,7 +5,7 @@ import os
 import streamlit as st
 from summarization.overall_summary import extract_sections_with_titles, generate_metadata, arxiv, text_splitter
 from search.find_Research_Paper import run_literature_review
-from search.find_latest_research_paper import run_literature_review_latest
+from search.find_latest_Research_paper import run_literature_review_latest
 from summarization.sectionSummarizer import summarize_section, summarizer_agent, LLM, Crew, Process
 from comparision.ComparePapers import extract_text_from_pdf, chain
 from io import BytesIO
