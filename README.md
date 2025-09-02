@@ -67,14 +67,16 @@ It leverages **Agentic AI workflows** and **Agentic RAG** (via the [Agno](https:
 ## 📂 Project Structure
 
 ```
-├── app.py                      # Main Streamlit app
-├── Agentic_Rag.py              # Agentic RAG setup (Agno + Pinecone + Gemini)
-├── ComparePapers.py            # PDF comparison logic
-├── find_Research_Paper.py      # ArXiv search & summarization agents
-├── overall_summary.py          # Metadata extraction & PDF section parsing
-├── sectionSummarizer.py        # Section-wise summarization logic
-├── assets/                     # Logo and images
-└── requirements.txt            # Dependencies
+ScholarLens/
+├── main.py                  # Entry point
+├── requirements.txt         # Dependencies
+├── comparision/             # Paper comparison module
+├── rag/                     # Agentic RAG implementation
+├── search/                  # Research paper search tools
+├── summarization/           # Summarization modules
+├── utils/                   # Utilities (memory, DB patches)
+└── assets/                  # Images & static assets
+
 ```
 
 ---
