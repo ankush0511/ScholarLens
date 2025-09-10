@@ -7,8 +7,7 @@ streamlit
 langchain-community
 langchain_text_splitters
 PyMuPDF
-agno
+agno==1.8.1
 pinecone==5.4.2
 pypdf
-
 pysqlite3-binary
