@@ -13,3 +13,7 @@ __pycache__/
 ./__pycache__
 .temp_uploaded_file.pdf
 *research*
+.streamlit/
+.streamlit/secrets.toml
+.streamlit
+secrets.toml

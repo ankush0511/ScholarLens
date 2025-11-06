@@ -452,8 +452,9 @@ elif options == 'RAG Chatbot':
 
                 agent = Agent(
                     knowledge=pdf_knowledge_base,
-                    model=Gemini(id="gemini-2.0-flash-lite"),
+                    model=Gemini(id="gemini-2.0-flash"),
                     description="You are an AI with a memory.",
+                    instructions="Answer the user's questions based on the provided research paper. If unsure, admit it rather than fabricating information.",
                     memory=memory,
                     storage=storage,
                     enable_user_memories=True,
@@ -515,7 +516,7 @@ else:
             if st.button("🔍 Generate Comparison"):
                 with st.spinner("🧠 Analyzing and comparing papers..."):
                     try:
-                        response = chain.run({
+                        response = chain.invoke({
                             "paper1": pdf_texts[0][:6000],
                             "paper2": pdf_texts[1][:6000]
                         })

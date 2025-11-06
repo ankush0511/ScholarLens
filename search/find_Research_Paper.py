@@ -14,7 +14,7 @@ from google import genai
 GOOGLE_API_KEY=st.secrets['GOOGLE_API_KEY']
 # GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 llm=LLM(
-    model="gemini/gemini-2.5-flash",
+    model="gemini/gemini-2.0-flash",
     api_key=GOOGLE_API_KEY
 )
 
