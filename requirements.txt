@@ -118,11 +118,6 @@ pdfminer.six==20250506
 pdfplumber==0.11.7
 pillow==12.0.0
 pinecone==5.4.2
-<<<<<<< Updated upstream
-pypdf
-pysqlite3-binary
-langchain
-=======
 pinecone-plugin-inference==3.1.0
 pinecone-plugin-interface==0.0.7
 platformdirs==4.5.0
@@ -203,4 +198,3 @@ yarl==1.22.0
 youtube-transcript-api==1.2.3
 zipp==3.23.0
 zstandard==0.25.0
->>>>>>> Stashed changes
