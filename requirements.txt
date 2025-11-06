@@ -1,3 +1,4 @@
+pysqlite3-binary
 agno==1.8.1
 aiohappyeyeballs==2.6.1
 aiohttp==3.13.2
