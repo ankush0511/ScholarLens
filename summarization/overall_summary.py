@@ -16,7 +16,7 @@ load_dotenv()
 api_key=st.secrets["GROQ_API_KEY"]
 
 
-llm=ChatGroq(model="gemma2-9b-it",api_key=api_key)
+llm=ChatGroq(model="openai/gpt-oss-120b",api_key=api_key)
 
 
 text_splitter=RecursiveCharacterTextSplitter(
@@ -59,9 +59,19 @@ def generate_metadata(chunks):
     Only return the JSON format,whithout json quotation and no explanation.
     """
     response = llm.invoke(chunk_prompt)
-    e_info.append(response.content)
-    e_info=json.loads(e_info[0])
-    return e_info
+    
+    try:
+        content = response.content.strip()
+        if content.startswith('```'):
+            content = content.split('\n', 1)[1]
+        if content.endswith('```'):
+            content = content.rsplit('\n', 1)[0]
+        
+        return json.loads(content)
+    except json.JSONDecodeError as e:
+        st.error(f"JSON parsing error: {e}")
+        st.error(f"Raw response: {response.content}")
+        return None
 
 
 
